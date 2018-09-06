@@ -6,4 +6,5 @@
 - folder mock_data with description products, must be put folder db
 - file generator_products.rb must be put tasks
 
-- How to run: **rake products:load_seed**
+The products generator will load any random products with description, region, alcohol percentage, product name, wine term, wine color and photo.
+- You need to run command in console rake products:**load_seed[and you quantity]**. Example **rake products:load_seed[50]**
