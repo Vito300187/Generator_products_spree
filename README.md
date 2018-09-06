@@ -5,7 +5,7 @@
 
 - folder bottle with image, must be put in the following way app/assets/images
 - folder mock_data with description products, must be put folder db
-- file generator_products.rb must be put tasks
+- files for generator in lib/tasks
 
 - You need to run command in console **rake products:load_seed[and you quantity]**. Example **rake products:load_seed[50]**
 - For clean the database(state, order, user, zone, shipping cathegory,shipping methods, products ), need run **rake products:remove_seed**
