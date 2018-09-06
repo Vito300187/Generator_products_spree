@@ -1,7 +1,8 @@
 namespace :products do
-  desc 'Load 50 products in database' #description rake task
-  task load_seed: :environment do
-    50.times do |i| #gerenator 50 products for project
+  desc 'Load products in database'
+  task load_products: :environment do
+    # Created products
+    @count_of_products.times do |i|
       kinds_rand = File.open(Rails.root.join('db', 'mock_data', 'kinds.md')).readlines.sample
       regions_rand = File.open(Rails.root.join('db', 'mock_data', 'regions.md')).readlines.sample
       names_rand = File.open(Rails.root.join('db', 'mock_data', 'names.md')).readlines.sample
@@ -13,25 +14,35 @@ namespace :products do
           shipping_category:  Spree::ShippingCategory.first,
           meta_description:   'Wine, is the best drink in the world',
           meta_keywords:      %w[wine drink alcohol bottle expensive drink'],
-          meta_title:         name, #random name
-          price:              rand(50..800), #random price
-          sku:                rand(1_000_000..1_999_999), #random sku
-          year:               rand(1960..2005), #random year
-          region:             regions_rand.chomp, #random region
-          alcohol_percentage: rand(5..15), #random alcohol
-          wine_kind:          kinds_rand.chomp #random kind
+          meta_title:         name,
+          price:              rand(50..800),
+          sku:                rand(1_000_000..1_999_999),
+          year:               rand(1960..2005),
+          region:             regions_rand.chomp,
+          alcohol_percentage: rand(5..15),
+          wine_kind:          kinds_rand.chomp,
+          wine_color:         Spree::Variant.wine_colors.keys.sample,
+          wine_term:          Spree::Variant.wine_terms.keys.sample
       )
-      #Create image for every products in cycle
+
+      product.stock_items.each { |stock_item| stock_item.adjust_count_on_hand(rand(10..50)) }
+
       image = Spree::Image.create!(
           attachment: {
-              io:       file_image,
-              filename: "#{rand(1..20)}.jpg"
+              io:                file_image,
+              filename:          "#{rand(1..20)}.jpg"
           }
       )
-      #Added image in products
+
       product.images << image
+
+      product.ratings.create!(
+          user_id:             Spree::User.all.sample.id,
+          rating:              rand(1..5)
+      )
     end
-      #And put string console all went well
-    puts 'Here are your products'
+
+    puts 'Products created'
   end
 end
+
